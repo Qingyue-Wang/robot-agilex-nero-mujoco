@@ -1,0 +1,9 @@
+[contract]
+id = "robonix/primitive/arm/emergency_stop"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/EmergencyStop.srv"
+description = "Immediately hold the simulated arm at its current pose and close the control gate."
+
+[mode]
+type = "rpc"

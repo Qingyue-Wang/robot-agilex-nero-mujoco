@@ -1,0 +1,14 @@
+# Top-down pick: approach above the target -> descend -> close the gripper ->
+# lift, planned via MoveIt compute_ik (KDL) and executed through the bridge's
+# FollowJointTrajectory actions. Requires move_group running (needs
+# /compute_ik); fails with a clear detail (not a hang/crash) if unavailable.
+# Grasp reliability is a known limitation — see CAPABILITY.md.
+[contract]
+id = "robonix/primitive/arm/pick"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/Pick.srv"
+description = "Top-down pick sequence (approach/descend/close/lift) for an object at a given or last-observed pose."
+
+[mode]
+type = "rpc"

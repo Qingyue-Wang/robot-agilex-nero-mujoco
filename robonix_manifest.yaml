@@ -1,0 +1,52 @@
+manifestVersion: 1
+name: mujoco-nero-arm-deploy
+
+catalog:
+  name: robonix.robot.agilex.nero_arm_mujoco
+  version: 0.1.0
+  description: Native MuJoCo simulation of the fixed-base AgileX Nero arm for Robonix.
+  license: Apache-2.0
+  tags: [robot, deploy, simulation, mujoco, nero, arm, gripper, manipulation]
+  maintainers:
+    - wqy <wqy@localhost>
+
+env:
+  ROS_DOMAIN_ID: "0"
+  RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+
+system:
+  # Phase 1+2 stack: atlas (contract registry) + executor (task runner) + soma
+  # (robot/body model). `pilot` (VLM planning) and `liaison` (chat/voice UI)
+  # are Phase 3+ and are intentionally omitted.
+  #
+  # pilot's VLM credentials are NOT stored in this file — `rbnx` expands
+  # ${VAR} in every scalar against the process environment at boot time, so
+  # export them before `rbnx boot`, e.g.:
+  #   export VLM_BASE_URL=https://.../v1
+  #   export VLM_API_KEY=sk-...
+  #   export VLM_MODEL=deepseek-flash
+  pilot:
+    listen: 127.0.0.1:50072
+    vlm:
+      upstream: ${VLM_BASE_URL}
+      api_key: ${VLM_API_KEY}
+      model: ${VLM_MODEL}
+  liaison:
+    listen: 127.0.0.1:50082
+  atlas:
+    listen: 0.0.0.0:50051
+  executor:
+    listen: 127.0.0.1:50061
+  soma:
+    listen: 127.0.0.1:50091
+    robot_yaml: soma.yaml
+
+primitive:
+  - name: nero_arm
+    path: ./primitives/nero_arm
+    config:
+      joint_states_topic: /joint_states
+      joint_command_topic: /joint_command
+      end_pose_topic: /feedback/tcp_pose
+      sentinel_timeout_s: 90
+      viewer: true

@@ -1,0 +1,11 @@
+# Grasp-target object pose read from the tabletop scene (MuJoCo ground truth).
+# Frame `world` == `base_link` (the arm's base is fixed at the world origin).
+[contract]
+id = "robonix/primitive/arm/object_pose"
+version = "1"
+kind = "primitive"
+idl = "common_interfaces/geometry_msgs/msg/PoseStamped.msg"
+description = "Grasp-target object pose in the world (== base_link) frame."
+
+[mode]
+type = "topic_out"

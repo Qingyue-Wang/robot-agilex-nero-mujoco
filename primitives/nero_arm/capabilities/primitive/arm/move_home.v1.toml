@@ -1,0 +1,9 @@
+[contract]
+id = "robonix/primitive/arm/move_home"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/MoveHome.srv"
+description = "Command the simulated arm back to its zero (home) joint pose."
+
+[mode]
+type = "rpc"

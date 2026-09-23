@@ -1,0 +1,11 @@
+# robonix/primitive/arm/follow_joint_trajectory — execute a timed joint
+# trajectory through the bridge's FollowJointTrajectory action (the standard
+# MoveIt execution interface). `trajectory.joint_names` selects the controller:
+#   joint1..joint7            -> the arm controller (arm_controller_action)
+#   gripper_joint1/gripper_joint2 -> the gripper controller (gripper_controller_action)
+trajectory_msgs/JointTrajectory trajectory
+---
+bool success
+string arm
+string detail
+float64[] final_joints_rad

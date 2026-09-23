@@ -1,0 +1,41 @@
+manifestVersion: 1
+
+package:
+  name: com.robonix.sim.nero_arm
+  version: 0.1.0
+  description: Simulated fixed-base AgileX Nero arm and parallel gripper (MuJoCo Native backend).
+  tags: [primitive, arm, gripper, simulation, mujoco, nero]
+  maintainers:
+    - wqy <wqy@localhost>
+  license: Apache-2.0
+
+build: bash scripts/build.sh
+start: bash scripts/start.sh
+
+# The arm primitive contracts are defined in-package (capabilities/primitive/arm)
+# because this Robonix source tree does not ship an official arm contract set.
+# `path:` points each entry at its local TOML; rbnx codegen merges these with
+# the shared lib/ (lifecycle, common_interfaces) into rbnx-build/codegen/.
+capabilities:
+  - name: robonix/primitive/arm/joint_states
+    path: capabilities/primitive/arm/joint_states.v1.toml
+  - name: robonix/primitive/arm/joint_command
+    path: capabilities/primitive/arm/joint_command.v1.toml
+  - name: robonix/primitive/arm/end_pose
+    path: capabilities/primitive/arm/end_pose.v1.toml
+  - name: robonix/primitive/arm/object_pose
+    path: capabilities/primitive/arm/object_pose.v1.toml
+  - name: robonix/primitive/arm/status
+    path: capabilities/primitive/arm/status.v1.toml
+  - name: robonix/primitive/arm/set_enabled
+    path: capabilities/primitive/arm/set_enabled.v1.toml
+  - name: robonix/primitive/arm/emergency_stop
+    path: capabilities/primitive/arm/emergency_stop.v1.toml
+  - name: robonix/primitive/arm/move_home
+    path: capabilities/primitive/arm/move_home.v1.toml
+  - name: robonix/primitive/arm/follow_joint_trajectory
+    path: capabilities/primitive/arm/follow_joint_trajectory.v1.toml
+  - name: robonix/primitive/arm/pick
+    path: capabilities/primitive/arm/pick.v1.toml
+  - name: robonix/primitive/arm/driver
+    path: capabilities/primitive/arm/driver.v1.toml

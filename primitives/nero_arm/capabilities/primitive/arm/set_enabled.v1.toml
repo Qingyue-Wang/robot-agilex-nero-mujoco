@@ -1,0 +1,9 @@
+[contract]
+id = "robonix/primitive/arm/set_enabled"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/SetEnabled.srv"
+description = "Open or close the simulated arm's control gate. When disabled, joint commands are ignored."
+
+[mode]
+type = "rpc"

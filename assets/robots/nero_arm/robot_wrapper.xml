@@ -1,0 +1,18 @@
+<mujoco model="nero_arm_wrapper">
+  <!--
+    Fixed-base Agilex Nero arm, wrapped for the Robonix Native runtime.
+
+    The upstream model stays read-only in vendor/nero_arm.xml so it can be
+    upgraded/diffed independently. Add only thin outer-layer patches here
+    (extra sites, contact tweaks, scene composition) — never edit the
+    vendor model in place.
+
+    Note: mesh `file=` references inside an <include>d file resolve relative
+    to the INCLUDED file's directory, and any <compiler meshdir> (here or in
+    the vendor file) is ignored for them. The vendored meshes therefore sit
+    flat next to vendor/nero_arm.xml so its bare `file="base_link.obj"` etc.
+    resolve to vendor/*.obj|stl directly.
+  -->
+
+  <include file="vendor/nero_arm.xml"/>
+</mujoco>

@@ -1,0 +1,11 @@
+# Standard joint feedback. The gripper's measured opening is exposed as a
+# named `gripper` joint in this same JointState stream.
+[contract]
+id = "robonix/primitive/arm/joint_states"
+version = "1"
+kind = "primitive"
+idl = "common_interfaces/sensor_msgs/msg/JointState.msg"
+description = "Measured arm and gripper joint positions, velocities, and efforts."
+
+[mode]
+type = "topic_out"

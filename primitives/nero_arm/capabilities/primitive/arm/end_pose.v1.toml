@@ -1,0 +1,10 @@
+# Unstamped end-effector pose in the provider's documented base frame.
+[contract]
+id = "robonix/primitive/arm/end_pose"
+version = "1"
+kind = "primitive"
+idl = "common_interfaces/geometry_msgs/msg/Pose.msg"
+description = "Measured end-effector pose in the arm provider's documented base frame."
+
+[mode]
+type = "topic_out"

@@ -1,0 +1,87 @@
+<mujoco model="nero_tabletop_pick">
+  <!--
+    Tabletop pick scenario for the fixed-base Nero arm.
+
+    The arm model is included unchanged from the robot wrapper (base_link at
+    the world origin, so the planning/base_link frame stays == world). This
+    scene adds the environment around it:
+
+      - a floor plane and a worktable whose TOP surface sits at z=0, so the
+        arm's base pedestal rests on the table;
+      - a free-floating grasp target ("object", a 4 cm cube) resting on the
+        table in front of the arm, reachable by bending the elbow.
+
+    Keep this file scene-only (floor/table/object/lights). Arm edits belong to
+    assets/robots/nero_arm/, never here.
+  -->
+
+  <include file="../robots/nero_arm/robot_wrapper.xml"/>
+
+  <asset>
+    <material name="scene_floor" rgba="0.62 0.62 0.66 1"/>
+    <material name="scene_table" rgba="0.42 0.33 0.25 1"/>
+    <material name="scene_object" rgba="0.85 0.20 0.15 1"/>
+  </asset>
+
+  <!-- Brighten the default headlight's ambient contribution (the single key
+       light below is directional and leaves unlit areas too dark otherwise),
+       and raise the shadow map resolution so the floor plane's shadow isn't
+       speckled with low-res aliasing artifacts. -->
+  <visual>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.5 0.5 0.5" specular="0.3 0.3 0.3"/>
+    <quality shadowsize="4096"/>
+  </visual>
+
+  <!-- Frame the free camera on the tabletop rather than the world origin.
+       Negative x — see the table body comment below for why. -->
+  <statistic center="-0.2 0 0.05" extent="1.0"/>
+
+  <worldbody>
+    <!-- Floor below the worktable; catches anything that falls off. -->
+    <geom name="floor" type="plane" size="1.2 1.2 0.05" pos="0 0 -0.7" material="scene_floor"/>
+
+    <!--
+      Worktable: a solid box, top face at z=0 (the arm base rests here).
+
+      Placed on the -x side of the base, not +x: at joint1=0 the shoulder
+      (joint2) bends the arm out toward -x by construction (see link2's
+      frame in vendor/nero_arm.xml), and joint1 only travels +-155 deg
+      (2.70526 rad) — not enough to yaw a full 180 deg over to +x.
+    -->
+    <body name="table" pos="-0.15 0 -0.35">
+      <geom name="table_geom" type="box" size="0.5 0.5 0.35" material="scene_table"/>
+    </body>
+
+    <!--
+      Grasp target: 4 cm cube on the table, 0.4 m in front of the arm (the
+      -x side — see the table comment above). Position chosen by forward
+      kinematics, not just "in front": joint2=0.574, joint4=2.018 (joint1=0,
+      all other joints 0) lands the gripper-finger midpoint within 0.3 mm of
+      this exact point, with comfortable margin from both joints' limits
+      (>0.8 rad spare on joint2, >0.1 rad spare on joint4).
+
+      Known limitation for a future pick planner (Phase 3+, not solved here):
+      link7's palm geometry (gripper_base, the largest collision mesh on the
+      wrist) extends ~16 cm along the approach direction. At this horizontal
+      approach angle the palm reaches the object's x before the fingertips do
+      (verified: at the finger-straddle configs above, the palm's world x-span
+      already overlaps the object's x well before the fingers close on it), so
+      a naive "drive straight toward the object" trajectory pushes the cube
+      instead of grasping it. A working pick needs either a steeper/top-down
+      wrist angle (joint6) or an approach that keeps the palm above/behind the
+      object until the last moment — left to the pick-planning primitive.
+    -->
+    <body name="object" pos="-0.4 0 0.02">
+      <joint type="free"/>
+      <geom name="object_geom" type="box" size="0.02 0.02 0.02" mass="0.05"
+            material="scene_object" friction="2 0.05 0.001"/>
+    </body>
+
+    <!-- Two off-axis lights (key + fill) so the arm meshes aren't lit only
+         head-on and the far side of the table isn't left dark. -->
+    <light name="key" pos="-0.6 -0.4 0.7" dir="0.6 0.4 -0.7"
+           diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2" ambient="0.15 0.15 0.15"/>
+    <light name="fill" pos="0.3 0.5 0.8" dir="-0.3 -0.5 -0.8"
+           diffuse="0.5 0.5 0.5" specular="0.1 0.1 0.1" ambient="0.1 0.1 0.1"/>
+  </worldbody>
+</mujoco>

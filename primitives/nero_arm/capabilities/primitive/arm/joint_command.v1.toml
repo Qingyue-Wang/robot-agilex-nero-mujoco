@@ -1,0 +1,11 @@
+# Standard joint command input. Names and positions use the same units as
+# joint_states; a `gripper` entry commands the finger opening in metres.
+[contract]
+id = "robonix/primitive/arm/joint_command"
+version = "1"
+kind = "primitive"
+idl = "common_interfaces/sensor_msgs/msg/JointState.msg"
+description = "Named arm and gripper joint command input using standard JointState units."
+
+[mode]
+type = "topic_in"

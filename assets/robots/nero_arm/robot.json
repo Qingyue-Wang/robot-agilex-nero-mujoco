@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "nero_arm",
+  "label": "Agilex Nero Arm",
+  "description": "Fixed-base Agilex Nero 7-DOF arm with 2-finger parallel gripper, adapted for the Native MuJoCo runtime.",
+  "model": "robot_wrapper.xml",
+  "dragRootBody": "base_link",
+  "files": "index.json",
+  "controlledActuators": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7",
+    "gripper"
+  ],
+  "sensors": {}
+}

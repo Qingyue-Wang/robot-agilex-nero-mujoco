@@ -1,0 +1,6 @@
+{
+  "defaultRobot": "nero_arm",
+  "robots": [
+    "nero_arm"
+  ]
+}

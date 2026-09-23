@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+  Kinematic tree for the fixed-base AgileX Nero arm + parallel gripper,
+  extracted from the vendor URDF/xacro set
+  (tutorial_for_mujoco/urdf/urdf/nero_description.urdf,
+   nero_with_gripper_flange_description.xacro,
+   nero_with_gripper_description.xacro).
+
+  This is the Soma-facing URDF: links and joints only (no meshes/inertials),
+  matching the joint names, origins, axes and limits of the MuJoCo model
+  (assets/robots/nero_arm/vendor/nero_arm.xml) and the ROS bridge
+  (sim/bridge/bridge_node.py, which publishes joint1..joint7 + gripper).
+
+  The gripper "gripper" opening is published by the bridge as a single named
+  JointState entry (finger width in metres); the physical fingers are the two
+  prismatic joints gripper_joint1 / gripper_joint2 below.
+-->
+<robot name="mujoco_nero_arm">
+  <link name="world"/>
+  <joint name="world_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link"/>
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.138" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.70526" upper="2.70526" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link1"/>
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 0" rpy="1.5707963 3.1415926 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.74" upper="1.74" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link2"/>
+  <joint name="joint3" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0 -0.31 0" rpy="-1.5707963 0 3.1415926"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.75" upper="2.75" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link3"/>
+  <joint name="joint4" type="revolute">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 0 0" rpy="-1.5707963 0 3.1415926"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.01" upper="2.14" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link4"/>
+  <joint name="joint5" type="revolute">
+    <parent link="link4"/>
+    <child link="link5"/>
+    <origin xyz="0 -0.27001 0" rpy="1.5707963 -1.5707963 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.75" upper="2.75" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link5"/>
+  <joint name="joint6" type="revolute">
+    <parent link="link5"/>
+    <child link="link6"/>
+    <origin xyz="0 0 0" rpy="1.5707963 -1.5707963 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.73" upper="0.95" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link6"/>
+  <joint name="joint7" type="revolute">
+    <parent link="link6"/>
+    <child link="link7"/>
+    <origin xyz="0 -0.0235 0" rpy="1.5707963 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5707963" upper="1.5707963" effort="100" velocity="5"/>
+  </joint>
+
+  <link name="link7"/>
+  <joint name="gripper_flange_joint" type="fixed">
+    <parent link="link7"/>
+    <child link="gripper_flange"/>
+    <origin xyz="0.031 0 -0.0235" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
+  <link name="gripper_flange"/>
+  <joint name="gripper_base_joint" type="fixed">
+    <parent link="gripper_flange"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 0.006" rpy="0 0 0"/>
+  </joint>
+
+  <link name="gripper_base"/>
+  <joint name="gripper_joint1" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="gripper_link1"/>
+    <origin xyz="0 0 0.138" rpy="1.5707963 0 3.1415926"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="0.05" effort="10" velocity="3"/>
+  </joint>
+
+  <link name="gripper_link1"/>
+  <joint name="gripper_joint2" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="gripper_link2"/>
+    <origin xyz="0 0 0.138" rpy="1.5707963 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <limit lower="-0.05" upper="0" effort="10" velocity="3"/>
+  </joint>
+
+  <link name="gripper_link2"/>
+</robot>

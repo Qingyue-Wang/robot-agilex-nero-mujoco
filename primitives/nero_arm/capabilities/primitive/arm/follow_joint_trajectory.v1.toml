@@ -1,0 +1,12 @@
+# Execute a whole-joint trajectory through the bridge's FollowJointTrajectory
+# action (the same MoveIt execution interface the arm_controller /
+# gripper_controller expose). `trajectory.joint_names` picks arm vs gripper.
+[contract]
+id = "robonix/primitive/arm/follow_joint_trajectory"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/FollowJointTrajectory.srv"
+description = "Execute a timed joint trajectory through the MoveIt FollowJointTrajectory action."
+
+[mode]
+type = "rpc"

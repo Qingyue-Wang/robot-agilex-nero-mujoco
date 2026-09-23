@@ -1,0 +1,7 @@
+---
+bool connected
+bool enabled
+string arm
+float64[] joints_rad
+float64 gripper_width_m
+string detail

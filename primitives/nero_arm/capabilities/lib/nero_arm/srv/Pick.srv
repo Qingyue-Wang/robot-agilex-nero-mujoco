@@ -1,0 +1,20 @@
+# robonix/primitive/arm/pick — top-down pick sequence (approach -> descend ->
+# close -> lift) driven by MoveIt's compute_ik + the bridge's
+# FollowJointTrajectory actions. Requires move_group to be running (exposes
+# /compute_ik); see the pick MCP tool's docstring for the failure mode when
+# it is not.
+#
+# x, y, z: object position in the base_link/world frame. All optional — if
+# any is omitted (NaN), the primitive substitutes the most recently received
+# /feedback/object_pose (or fails with a clear detail if none has arrived).
+float64 x
+float64 y
+float64 z
+bool has_x
+bool has_y
+bool has_z
+---
+bool success
+string arm
+string detail
+float64[] final_joints_rad

@@ -1,0 +1,16 @@
+[
+  "robot_wrapper.xml",
+  "vendor/nero_arm.xml",
+  "vendor/base_link.obj",
+  "vendor/link1.obj",
+  "vendor/link2.obj",
+  "vendor/link3.obj",
+  "vendor/link4.obj",
+  "vendor/link5.obj",
+  "vendor/link6.obj",
+  "vendor/link7.obj",
+  "vendor/gripper_flange.stl",
+  "vendor/gripper_base.stl",
+  "vendor/gripper_link1.stl",
+  "vendor/gripper_link2.stl"
+]

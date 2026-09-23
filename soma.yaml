@@ -1,0 +1,61 @@
+urdf:
+  path: ./urdf/nero_arm.urdf
+  root_link: base_link
+  model_name: mujoco_nero_arm
+
+robot:
+  id: mujoco_nero_arm_01
+  display_name: "Fixed-base AgileX Nero arm (MuJoCo)"
+  family: fixed_arm
+  root_part: base
+  dimensions: {length_m: 0.35, width_m: 0.35, height_m: 0.89}
+  mass_kg: 5.1
+  exports: []
+  components:
+    - id: base
+      type: fixed_base
+      urdf_link: base_link
+      exports: []
+    - id: arm
+      type: manipulator
+      urdf_link: base_link
+      exports:
+        - provider_id: nero_arm
+          capabilities:
+            - {path: robonix/primitive/arm/joint_states, description: "Nero arm joint feedback."}
+            - {path: robonix/primitive/arm/joint_command, description: "Nero named joint command."}
+            - {path: robonix/primitive/arm/end_pose, description: "Nero end-effector pose."}
+            - {path: robonix/primitive/arm/object_pose, description: "Grasp-target object pose (world frame) from the tabletop scene."}
+            - {path: robonix/primitive/arm/status, description: "Read arm connection and enable state."}
+            - {path: robonix/primitive/arm/set_enabled, description: "Open or close the control gate."}
+            - {path: robonix/primitive/arm/emergency_stop, description: "Hold pose and close the control gate."}
+            - {path: robonix/primitive/arm/move_home, description: "Command the arm to its home pose."}
+            - {path: robonix/primitive/arm/follow_joint_trajectory, description: "Execute a timed joint trajectory through the MoveIt FollowJointTrajectory action."}
+            - {path: robonix/primitive/arm/pick, description: "Top-down pick sequence for an object at a given or last-observed pose. Requires move_group; grasp reliability is a known limitation."}
+      components:
+        - id: gripper
+          type: parallel_jaw_gripper
+          urdf_link: gripper_base
+          state:
+            joint_name: gripper
+            open_position_m: 0.1
+            open_tolerance_m: 0.003
+          exports:
+            - provider_id: nero_arm
+              capabilities:
+                - {path: robonix/primitive/arm/joint_command, description: "Command the gripper through the named arm joint input."}
+
+description:
+  summary: "A Native MuJoCo fixed-base Nero 7-DOF arm with a parallel gripper on a worktable, a graspable target object, controlled in joint space over ROS 2."
+  can_do:
+    - "Read joint and gripper feedback through joint_states."
+    - "Command the arm and gripper in joint space through joint_command."
+    - "Read the end-effector pose through end_pose."
+    - "Read the grasp-target object pose through object_pose."
+    - "Open or close the control gate, trigger an emergency stop, and return home."
+    - "Execute a whole-joint trajectory through the FollowJointTrajectory action (the MoveIt execution interface)."
+  cannot_do:
+    - "Plan Cartesian motion (IK/MoveIt planning); only pre-computed joint trajectories are executed."
+    - "Autonomously pick or perceive; no camera or pick skill is included (the object pose is sim ground truth)."
+  notes:
+    - "Motion is intentionally overdamped (vendor damping=2000); allow several seconds for settling."

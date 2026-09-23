@@ -1,0 +1,9 @@
+[contract]
+id = "robonix/primitive/arm/status"
+version = "1"
+kind = "primitive"
+idl = "nero_arm/srv/GetStatus.srv"
+description = "Read the simulated Nero arm's connection, enable, joint and gripper state without moving it."
+
+[mode]
+type = "rpc"
