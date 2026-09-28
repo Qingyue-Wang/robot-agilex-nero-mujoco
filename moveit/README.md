@@ -40,6 +40,23 @@ source moveit/ws/install/setup.bash
 
 ## Run headless
 
+### Recommended: complete stack
+
+From the repository root, use the unified launcher:
+
+```bash
+bash scripts/start.sh
+```
+
+It builds/sources the MoveIt overlay, starts Robonix, waits for the primitive to
+launch the MuJoCo bridge and publish `/joint_states`, then starts `move_group`
+and waits for its planning services. Do not start `sim/start.sh` separately in
+this mode.
+
+### Manual/debug mode
+
+If you need to run each layer separately:
+
 ```bash
 # 1. MuJoCo bridge (repo-local .venv; publishes /joint_states + /tf, serves the actions)
 bash sim/start.sh
@@ -53,6 +70,9 @@ ros2 launch nero_gripper_moveit_config move_group.launch.py
 export PATH=/usr/bin:$PATH && source /opt/ros/humble/setup.zsh
 python3 moveit/cartesian_demo.py 0.05 0 0
 ```
+
+For Robonix integration, use `rbnx boot -f robonix_manifest.yaml` instead of
+starting `sim/start.sh` manually; the primitive owns the simulator lifecycle.
 
 `cartesian_demo.py [dx dy dz] [--no-ready]` does not use `moveit_py` /
 `moveit_commander` (not installed on Humble here); it drives the raw services:
