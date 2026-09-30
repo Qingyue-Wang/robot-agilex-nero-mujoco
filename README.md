@@ -94,12 +94,66 @@ bash scripts/build.sh          # venv + rbnx codegen --mcp -> rbnx-build/codegen
 
 ## Run
 
-Bring up the whole stack (system services + the primitive):
+### Recommended: one-command startup
+
+From any shell (including `zsh`), run the bash launcher:
 
 ```bash
-source .env                       # loads VLM_BASE_URL/API_KEY/MODEL (gitignored)
-rbnx boot -f robonix_manifest.yaml
+cd /home/wqy/robot-agilex-nero-mujoco
+bash scripts/start.sh
 ```
+
+The launcher builds and sources the local MoveIt overlay, starts `rbnx boot`,
+waits for `/joint_states`, starts the external MoveIt `move_group`, and waits
+for `/compute_fk`, `/compute_ik`, and `/compute_cartesian_path`. The primitive
+starts the MuJoCo bridge itself, so **do not run `bash sim/start.sh` at the same
+time**. Press `Ctrl-C` to stop the complete stack. Logs are written to
+`logs/startup/`.
+
+Use `--skip-build` after the overlay has already been built, or increase the
+readiness timeout when the machine is slow:
+
+```bash
+bash scripts/start.sh --skip-build
+bash scripts/start.sh --timeout 180
+```
+
+The launcher sources ROS setup files inside bash. You do not need to activate
+`.venv` or source `setup.bash` manually from zsh.
+
+### Manual startup checklist
+
+Use this alternative for debugging individual layers, not together with the
+one-command launcher:
+
+```bash
+# Build the MoveIt overlay once
+bash moveit/build.sh
+
+# Option A: standalone bridge + MoveIt debugging
+# Terminal 1
+bash sim/start.sh
+# Terminal 2 (zsh)
+source /opt/ros/humble/setup.zsh
+source moveit/ws/install/setup.zsh
+ros2 launch nero_gripper_moveit_config move_group.launch.py
+
+# Option B: Robonix integration (use this instead of Option A)
+# Terminal 1
+source .env
+rbnx boot -f robonix_manifest.yaml
+# Terminal 2 (zsh)
+source /opt/ros/humble/setup.zsh
+source moveit/ws/install/setup.zsh
+ros2 launch nero_gripper_moveit_config move_group.launch.py
+
+# Teardown
+bash scripts/cleanup.sh --all
+```
+
+Choose either standalone bridge debugging or Robonix integration; do not run
+`sim/start.sh` and `rbnx boot` together because the primitive launched by
+`rbnx boot` already owns the simulator process.
 
 The manifest omits `pilot` and `liaison` (Phase 3+ VLM planning / chat UI).
 `pilot`'s VLM credentials are not stored in the manifest — its `vlm.upstream` /

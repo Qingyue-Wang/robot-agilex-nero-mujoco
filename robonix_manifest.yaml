@@ -48,5 +48,28 @@ primitive:
       joint_states_topic: /joint_states
       joint_command_topic: /joint_command
       end_pose_topic: /feedback/tcp_pose
+      # object_pose_topic: /feedback/object_pose
+      # task_objects_topic: /sim/task_objects
+      # pick_command_topic: /nero/pick_command
+      # pick_status_topic: /nero/pick_status
       sentinel_timeout_s: 90
       viewer: true
+      
+
+# The pick skill turns a spoken/typed object name into a grasp: it resolves the
+# name against the sim's ground-truth inventory (exact/alias first, then the
+# VLM on the offscreen /scene/rgb frame) and then drives the arm primitive over
+# /nero/pick_command. Its VLM credentials come from the same ${VLM_*} env
+# placeholders as `system.pilot.vlm` — export them before `rbnx boot`.
+# skill:
+#  - name: nero_pick
+#    url: https://github.com/syswonder/skill-pick-vertical-grasp-rbnx.git
+#    config:
+#     mode: pipeline                         # pipeline or vla
+#     vla_max_steps: 50                     # used only in vla mode
+#     gripper_open_width: 0.08              # metres
+#     gripper_close_width: 0.0              # metres
+#     gripper_grasp_threshold_width: 0.005  # measured width above this means held
+#     gripper_feedback_timeout_s: 2.0
+#     gripper_joint_states_topic: /arm/joint_states_single
+#     park_at_teach_safe_after_pick: false
